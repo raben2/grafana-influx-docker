@@ -31,16 +31,21 @@ RUN bash \
 RUN npm install \
     && npm install -g grunt-cli
 RUN grunt --force
-RUN go clean ./... \
+RUN go clean -i -r \
     && ln -sf /go/src/github.com/grafana/grafana /grafana 
 VOLUME ['/grafana']
 RUN mkdir -p /grafana/data \
     && mkdir /grafana/data/plugins \
     && mkdir /grafana/data/dashboards \
     && mkdir /grafana/data/logs 
-RUN apk del .build-deps \
-    && rm -rf /tmp/* \
-    /var/cache/apk/*
+RUN /go/src/github.com/grafana/grafana/bin/grafana-cli --pluginsDir "/grafana/data/plugins" plugins install grafana-clock-panel \
+    && /go/src/github.com/grafana/grafana/bin/grafana-cli --pluginsDir "/grafana/data/plugins" plugins install grafana-piechart-panel \
+    && /go/src/github.com/grafana/grafana/bin/grafana-cli --pluginsDir "/grafana/data/plugins" plugins install grafana-simple-json-datasource
+RUN rm -rf /tmp/* \
+    /var/cache/apk/* \
+    && npm uninstall -g grunt-cli \
+    && apk del --purge .build-deps 
+
 COPY grafana.ini /grafana/conf/defaults.ini
 
 ENTRYPOINT 'bin/grafana-server'

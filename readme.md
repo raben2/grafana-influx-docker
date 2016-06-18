@@ -11,7 +11,5 @@ docker run -itd -p 8083:8083 -p 8086:8086 -p 2003:2003 -p 4242:4242 -p 25827:258
 ```
 docker run -dti -p 3000:3000 --link influx  grafana
 ```
-
-now logon to http://localhost:3000 and setup your datasource
-
-Influx Admin runs on http://localhost:8083
+Log on to http://localhost:3000 and setup your datasource
+Influx Admin UI runs on http://localhost:8083

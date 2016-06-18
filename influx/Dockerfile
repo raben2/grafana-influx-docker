@@ -8,10 +8,10 @@ RUN go get github.com/influxdata/influxdb
 RUN cd src/github.com/influxdata/influxdb \
     && git checkout -q $INFLUX \
     && python build.py \
-    && go clean ./... \
+    && go clean -i -r \
     && mv build/influx* /go/bin
 COPY influxdb.toml /etc/influxdb.toml
 COPY types.db /etc/types.db
-RUN apk del .build-deps \
+RUN apk del --purge .build-deps \
     && rm -rf /go/src/* /usr/local/go/src/* /tmp/* /var/cache/apk/
 ENTRYPOINT ["influxd", "--config", "/etc/influxdb.toml"]

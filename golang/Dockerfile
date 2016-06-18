@@ -7,10 +7,13 @@ RUN set -ex \
     && apk add --no-cache --virtual .build-deps \
         curl \
         gcc \
-        musl-dev \
-        go
+        musl-dev
 RUN set -ex \
-    && apk add --no-cache bash git ca-certificates openssl
+    && apk add --no-cache bash \
+    go \
+    git \
+    ca-certificates \
+    openssl
 RUN curl -L "$GOLANG_URL" -o /tmp/golang.tar.gz \
     && tar -C /usr/local -xzf /tmp/golang.tar.gz 
 ENV GOPATH=/go
@@ -24,6 +27,7 @@ RUN cd /usr/local/go/src \
     && ./make.bash \
 
 RUN go get github.com/sparrc/gdm \
-	&& rm -rf /tmp/* /var/cache/apk/*
+	&& rm -rf /tmp/* /var/cache/apk/* \
+    && apk del --purge .build-deps    
 RUN mkdir -p "$GOPATH/src" "$GOPATH/bin" && chmod -R 777 "$GOPATH"
 WORKDIR $GOPATH
