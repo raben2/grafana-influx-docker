@@ -46,6 +46,6 @@ RUN rm -rf /tmp/* \
     && npm uninstall -g grunt-cli \
     && apk del --purge .build-deps 
 
-COPY grafana.ini /grafana/conf/defaults.ini
+ADD grafana.ini /grafana/conf/defaults.ini
 
 ENTRYPOINT 'bin/grafana-server'
